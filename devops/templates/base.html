@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+{% block body_first %}{% endblock %}
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header layui-bg-cyan">
+        <div class="layui-logo" style="font-weight: bold;font-size: 26px;color: white">运维管理平台</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <a href="javascript:;">其它系统</a>
+            <dl class="layui-nav-child">
+                <dd><a href="">邮件管理</a></dd>
+                <dd><a href="">消息管理</a></dd>
+                <dd><a href="">授权管理</a></dd>
+            </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item"
+                <a href="javascript:;">
+                    <img src="/static/img/touxiang.jpeg" class="layui-nav-img">
+                    test
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll layui-bg-cyan">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree layui-bg-cyan" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;"><i class="layui-icon layui-icon-template-1">&nbsp;&nbsp;</i>
+                        监控系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">服务器</a></dd>
+                        <dd><a href="javascript:;">应用</a></dd>
+                        <dd><a href="javascript:;">中间件</a></dd>
+                        <dd><a href="">超链接</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-component">&nbsp;&nbsp;</i>发布系统</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">项目管理</a></dd>
+                        <dd><a href="javascript:;">应用管理</a></dd>
+                        <dd><a href="">超链接</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">CMDB</a></li>
+                <li class="layui-nav-item"><a href="">跳板机</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" style="background-color: #eeeeee">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">{% block content %}{% endblock %}</div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © 2019 版本
+    </div>
+</div>
+<script src="/static/layui/layui.js"></script>
+{% block js %}{% endblock %}
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+</script>
+</body>
+</html>
+
