@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+<!--头部-->
+{% block title %} 命名空间 {% endblock %}
+<!-停留的样式-->
+{% block nav-item-1 %} layui-nav-itemed {% endblock %}
+class="{% block nav-item-1-2 %} layui-this  {% endblock %} "
+
+
+<!--内容-->
+{% block content %}
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="demo" lay-filter="test"></table>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+<!--js代码-->
+{% block js %}
+    <script type="text/html" id="toolbarDemo">
+        <!--增加一个输入框-->
+        <input type="text" name="name" class="layui-input" style="width: 150px;height: 30px;float: left">
+        <button class="layui-btn layui-btn-sm" style="float: left" id="searchBtn">搜索</button>
+        <button class="layui-btn layui-btn-sm" style="float: left" id="createBtn">创建</button>
+    </script>
+
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit">YAML</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var $ = layui.jquery;
+
+            table.render({
+                elem: '#demo'
+                , url: '{% url "namespace_api" %}'
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                    title: '提示'
+                    , layEvent: 'LAYTABLE_TIPS'
+                    , icon: 'layui-icon-tips'
+                }]
+                , title: '数据表'
+                , skin: 'line'         // 取消表格竖线
+                , cols: [[
+                    //{field: 'id', title: '序号', width: 80, fixed: 'left', type: 'numbers'},   // 序号排序，使用type：'numbers'
+                    {field: 'name', title: '名称', width: 200, unresize: true, sort: true}
+                    , {field: 'labels', title: '标签', templet: labelsFormat}
+                    , {field: 'create_time', title: '创建时间'}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+                ]]
+                , page: true      // 设置分页
+                , id: "nstb"      // 设置表格重载， 这里使用必须是id："值"
+            });
+
+            function labelsFormat(d) {
+                result = ""
+                if (d.labels == null) {
+                    return "None"
+                } else {
+                    for (let key in d.labels) {
+                        result += key + "：" + d.labels[key] + "<br>"
+                    }
+                    return result
+                }
+            }
+
+            //监听行工具事件
+            table.on('tool(test)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    console.log(data)
+                    layer.confirm('是否确定删除' + data["name"] + "这个命令空间吗", function (index) {
+                        csrf_token = $('[name=csrfmiddlewaretoken]').val();
+
+                        $.ajax({
+                            type: "DELETE",
+                            url: "{% url "namespace_api" %}",
+                            data: data,
+                            headers: {"X-CSRFToken": csrf_token},
+                            success: function (res) {
+                                if (res.code == 0) {
+                                    layer.msg(res.msg, {icon: 6});
+                                    obj.del()  // 页面删除
+                                } else {
+                                    layer.msg(res.msg, {icon: 5})
+                                }
+                            },
+                            error: function () {
+
+                            },
+                        });
+                    });
+                } else if (obj.event === 'edit') {
+                    layer.prompt({
+                        formType: 2
+                        , value: data.email
+                    }, function (value, index) {
+                        obj.update({
+                            email: value
+                        });
+                        layer.close(index);
+                    });
+                }
+            });
+
+            // 搜索功能，使用document方式解决，只能搜索一次的问题
+            $(document).on('click','#searchBtn' ,function () {
+                // 获取搜索的值
+                var input_val = $('input[name=name]').val();
+                // 判断用户是点击搜索按钮是否有值，没有就刷新当前页面，获取所有，否则就返回后端接口，刷新
+                if (input_val == "" || input_val == null || input_val == undefined) { // "",null,undefined
+                    window.parent.location.reload()
+                } else {
+                    table.reload('nstb', {
+                        where: { //设定异步数据接口的额外参数，任意设
+                            // 要传回的key
+                            searchkey: input_val
+                        }
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    }); //只重载数据
+                }
+            });
+
+
+        });
+
+    </script>
+
+
+{% endblock %}

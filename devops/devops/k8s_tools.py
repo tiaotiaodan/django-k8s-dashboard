@@ -9,11 +9,12 @@ import os,hashlib,random
 from django.shortcuts import redirect # 重定向
 
 def auth_check(auth_type,str):
+    print(auth_type)
     if auth_type == "token":
         token = str
         configuration = client.Configuration()
-        configuration.host = "https://172.27.0.2:6443"  # APISERVER地址
-        configuration.ssl_ca_cert = r"/etc/kubernetes/pki/ca.crt"  # CA证书
+        configuration.host = "http://apiserver.scajy.cn"  # APISERVER地址
+        configuration.ssl_ca_cert = os.path.join("kubeconfig", "ca.crt") # CA证书
         configuration.verify_ssl = True  # 启用证书验证
         configuration.api_key = {"authorization": "Bearer " + token}  # 指定Token字符串
         client.Configuration.set_default(configuration)
@@ -48,3 +49,19 @@ def self_login_required(func):
         else:
             return redirect("/login")
     return inner
+
+
+# 加载认证配置
+def load_auth_config(auth_type,str):
+    if auth_type == "token":
+        token = str
+        configuration = client.Configuration()
+        configuration.host = "http://apiserver.scajy.cn"  # APISERVER地址
+        configuration.ssl_ca_cert = r"%s" %(os.path.join('kubeconfig', "ca.crt")) # CA证书
+        configuration.verify_ssl = True  # 启用证书验证
+        configuration.api_key = {"authorization": "Bearer " + token}  # 指定Token字符串
+        client.Configuration.set_default(configuration)
+    elif auth_type == "kubeconfig":
+        random_str = str
+        file_path = os.path.join("kubeconfig",random_str)
+        config.load_kube_config(r"%s" % file_path)

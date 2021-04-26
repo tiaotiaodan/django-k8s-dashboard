@@ -125,6 +125,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOGIN_URL = '/login/'        # 设置默认访问页面
+
 # 应用静态目录
 STATICFILES_DIRS = (
 os.path.join(BASE_DIR, 'static'),

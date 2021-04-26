@@ -5,24 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <style>
+        .layui-table-cell {
+            height: 100%;
+        }
+    </style>
 </head>
 <body class="layui-layout-body">
+{% csrf_token %}
 {% block body_first %}{% endblock %}
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header layui-bg-cyan">
-        <div class="layui-logo" style="font-weight: bold;font-size: 26px;color: white">运维管理平台</div>
+        <div class="layui-logo" style="font-weight: bold;font-size: 26px;color: white">k8s 管理平台</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <a href="javascript:;">其它系统</a>
-            <dl class="layui-nav-child">
-                <dd><a href="">邮件管理</a></dd>
-                <dd><a href="">消息管理</a></dd>
-                <dd><a href="">授权管理</a></dd>
-            </dl>
-            </li>
+            <!--namespace匿名空间选择-->
+            <div class="namespace layui-nav-item" style="width: 200px">
+                <select name="namespace" id="nsSelect" style="width: 200px; height: 30px; font-size: 20px;">
+
+                </select>
+            </div>
         </ul>
         <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item"
+            <!--头像和用户行注释-->
+            <!--
+            <li class="layui-nav-item">
                 <a href="javascript:;">
                     <img src="/static/img/touxiang.jpeg" class="layui-nav-img">
                     test
@@ -32,7 +39,10 @@
                     <dd><a href="">安全设置</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="">退出</a></li>
+            -->
+            <li class="layui-nav-item"><a href="{% url "logout" %}"><i class="layui-icon layui-icon-logout"
+                                                                       style="font-size: 25px;color: #1E9FFF;"></i></a>
+            </li>
         </ul>
     </div>
 
@@ -40,26 +50,49 @@
         <div class="layui-side-scroll layui-bg-cyan">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree layui-bg-cyan" lay-filter="test">
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;"><i class="layui-icon layui-icon-template-1">&nbsp;&nbsp;</i>
-                        监控系统</a>
+                <li class="layui-nav-item"><a href="{% url "index" %}"><i class="layui-icon layui-icon-console"
+                                                                          style="font-size: 15px;color: #1E9FFF;">&nbsp;&nbsp;</i>仪表盘</a>
+                </li>
+                <li class="layui-nav-item {% block nav-item-1 %} {% endblock %}">
+                    <a class="" href="javascript:;"><i class="layui-icon layui-icon-component"
+                                                       style="font-size: 15px;color: #1E9FFF;">&nbsp;&nbsp;</i>kubernetes</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">服务器</a></dd>
-                        <dd><a href="javascript:;">应用</a></dd>
-                        <dd><a href="javascript:;">中间件</a></dd>
-                        <dd><a href="">超链接</a></dd>
+                        <dd><a href="{% url "k8s:nodes" %}" class="{% block nav-item-1-1 %} {% endblock %} ">Node</a>
+                        </dd>
+                        <dd><a href="{% url "k8s:namespaces" %}" class="{% block nav-item-1-2 %} {% endblock %} ">Namespces</a>
+                        </dd>
+                        <dd><a href="{% url "k8s:PersistentVolumes" %}"
+                               class="{% block nav-item-1-3 %} {% endblock %} ">Persistent Volumes</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item {% block nav-item-2 %}{% endblock %}">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-app"
+                                              style="font-size: 15px;color: #1E9FFF;">&nbsp;&nbsp;</i>工作负载</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="{% url "workload:deployments" %}" class="{% block nav-this-2-1 %}{% endblock %}">Deployments</a>
+                        </dd>
+                        <dd><a href="javascript:;" class="{% block nav-this-2-2 %}{% endblock %}">Daemon Sets</a></dd>
+                        <dd><a href="javascript:;" class="{% block nav-this-2-3 %}{% endblock %}">Stateful Sets</a></dd>
+                        <dd><a href="javascript:;" class="{% block nav-this-2-4 %}{% endblock %}">pods</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;"><i class="layui-icon layui-icon-component">&nbsp;&nbsp;</i>发布系统</a>
+                    <a href="javascript:;"><i class="layui-icon layui-icon-app"
+                                              style="font-size: 15px;color: #1E9FFF;">&nbsp;&nbsp;</i>负载均衡</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">项目管理</a></dd>
-                        <dd><a href="javascript:;">应用管理</a></dd>
-                        <dd><a href="">超链接</a></dd>
+                        <dd><a href="javascript:;">Services</a></dd>
+                        <dd><a href="javascript:;">Ingresses</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="">CMDB</a></li>
-                <li class="layui-nav-item"><a href="">跳板机</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-template-1"
+                                              style="font-size: 15px;color: #1E9FFF;">&nbsp;&nbsp;</i>存储配置</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">Persistent Volume Claims</a></dd>
+                        <dd><a href="javascript:;">Config Maps</a></dd>
+                        <dd><a href="javascript:;">Secrets</a></dd>
+                    </dl>
+                </li>
             </ul>
         </div>
     </div>
@@ -78,10 +111,67 @@
 {% block js %}{% endblock %}
 <script>
     //JavaScript代码区域
-    layui.use('element', function () {
+    layui.use(['element', 'layer'], function () {
         var element = layui.element;
+        var $ = layui.jquery;
+        var layer = layui.layer;   // 弹窗
+
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'namespace_api' %}",    // 请求的url接口
+            //timeout: 5000,    // 设置超时时间
+            async: false,  // 关闭异步请求
+            success: function (res) {
+                if (res.code == 0) {
+                    // 把数据回写到页面上，通过循环传参数
+                    for (let i in res.data) {
+                        row = res.data[i];
+                        $("#nsSelect").append('<option value=' + row.name + '>' + row.name + '</option>')
+                    }
+
+                    // 设置默认命名空间
+                    $("#nsSelect").val("default")
+                } else {
+                    $("#nsSelect").append('<option value="default">default</option>');
+                    $("#nsSelect").attr("disabled", "disabled");
+                }
+            },
+            error: function () {
+                layer.msg("服务器接口异常", {icon: 5})
+            },
+        });
+
+
+        // 将当前选择的命名空间保存到本地浏览器session存储用户，以便其他页面能获取到当前选择的命名空间
+        var storage = window.sessionStorage;
+
+        // 定义获取命名空间
+        var namespace = storage.getItem("namespace");
+        // 通过ID获取当前命令空间值
+        var current_ns = $("#nsSelect").val();
+
+        // 判断是否有值
+        if (namespace == null) {
+            storage.setItem("namespace", current_ns)
+
+        } else {
+            $("#nsSelect").val(namespace)
+        }
+
+        // 如果这里面的值发生改变，就触发一下的值
+        $("#nsSelect").change(function () {
+            var curren_ns = $("#nsSelect").val()
+            storage.setItem("namespace", curren_ns)
+
+            // 选择命名空间后，刷新页面
+            location.reload()
+
+        })
+
+        // 点击页面退出，关闭接口
+
     });
 </script>
 </body>
 </html>
-
