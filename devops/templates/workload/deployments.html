@@ -3,8 +3,12 @@
 <!--头部-->
 {% block title %} dp节点 {% endblock %}
 <!-停留的样式-->
+
+<!--layui-nav-itemed 为开关-->
 {% block nav-item-2 %} layui-nav-itemed {% endblock %}
-class="{% block nav-item-2-1 %} layui-this  {% endblock %} "
+
+<!--layui-this 停留的背景颜色-->
+{% block nav-this-2-1 %} layui-this  {% endblock %}
 
 
 <!--内容-->
@@ -67,7 +71,7 @@ class="{% block nav-item-2-1 %} layui-this  {% endblock %} "
                     , {field: 'selector', title: 'Pod标签选择器', templet: selecotrFormat}
                     , {field: 'containers', title: '容器', templet: containersFormat}
                     , {field: 'create_time', title: '创建时间'}
-                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 160}
                 ]]
                 , page: true      // 设置分页
                 , id: "dp"      // 设置表格重载， 这里使用必须是id："值"

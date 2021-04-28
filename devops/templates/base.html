@@ -57,12 +57,12 @@
                     <a class="" href="javascript:;"><i class="layui-icon layui-icon-component"
                                                        style="font-size: 15px;color: #1E9FFF;">&nbsp;&nbsp;</i>kubernetes</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="{% url "k8s:nodes" %}" class="{% block nav-item-1-1 %} {% endblock %} ">Node</a>
+                        <dd><a href="{% url "k8s:nodes" %}" class="{% block nav-this-1-1 %} {% endblock %} ">Node</a>
                         </dd>
-                        <dd><a href="{% url "k8s:namespaces" %}" class="{% block nav-item-1-2 %} {% endblock %} ">Namespces</a>
+                        <dd><a href="{% url "k8s:namespaces" %}" class="{% block nav-this-1-2 %} {% endblock %} ">Namespces</a>
                         </dd>
                         <dd><a href="{% url "k8s:PersistentVolumes" %}"
-                               class="{% block nav-item-1-3 %} {% endblock %} ">Persistent Volumes</a></dd>
+                               class="{% block nav-this-1-3 %} {% endblock %} ">Persistent Volumes</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item {% block nav-item-2 %}{% endblock %}">
@@ -71,9 +71,9 @@
                     <dl class="layui-nav-child">
                         <dd><a href="{% url "workload:deployments" %}" class="{% block nav-this-2-1 %}{% endblock %}">Deployments</a>
                         </dd>
-                        <dd><a href="javascript:;" class="{% block nav-this-2-2 %}{% endblock %}">Daemon Sets</a></dd>
-                        <dd><a href="javascript:;" class="{% block nav-this-2-3 %}{% endblock %}">Stateful Sets</a></dd>
-                        <dd><a href="javascript:;" class="{% block nav-this-2-4 %}{% endblock %}">pods</a></dd>
+                        <dd><a href="{% url "workload:daemonsets" %}" class="{% block nav-this-2-2 %}{% endblock %}">Daemon Sets</a></dd>
+                        <dd><a href="{% url "workload:statefulsets" %}"  class="{% block nav-this-2-3 %}{% endblock %}">Stateful Sets</a></dd>
+                        <dd><a href="{% url "workload:pods" %}"   class="{% block nav-this-2-4 %}{% endblock %}">pods</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -102,9 +102,9 @@
         <div style="padding: 15px;">{% block content %}{% endblock %}</div>
     </div>
 
-    <div class="layui-footer">
+    <div class="layui-footer" style="text-align: center">
         <!-- 底部固定区域 -->
-        © 2019 版本
+       Copyright © 2019 版权所有
     </div>
 </div>
 <script src="/static/layui/layui.js"></script>

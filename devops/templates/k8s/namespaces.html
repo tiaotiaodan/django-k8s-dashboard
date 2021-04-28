@@ -3,8 +3,11 @@
 <!--头部-->
 {% block title %} 命名空间 {% endblock %}
 <!-停留的样式-->
+<!--layui-nav-itemed 为开关-->
 {% block nav-item-1 %} layui-nav-itemed {% endblock %}
-class="{% block nav-item-1-2 %} layui-this  {% endblock %} "
+
+<!--layui-this 停留的背景颜色-->
+{% block nav-this-1-2 %} layui-this {% endblock %}
 
 
 <!--内容-->
@@ -56,7 +59,7 @@ class="{% block nav-item-1-2 %} layui-this  {% endblock %} "
                     {field: 'name', title: '名称', width: 200, unresize: true, sort: true}
                     , {field: 'labels', title: '标签', templet: labelsFormat}
                     , {field: 'create_time', title: '创建时间'}
-                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 160}
                 ]]
                 , page: true      // 设置分页
                 , id: "nstb"      // 设置表格重载， 这里使用必须是id："值"
