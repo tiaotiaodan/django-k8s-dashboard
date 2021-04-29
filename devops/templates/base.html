@@ -76,12 +76,12 @@
                         <dd><a href="{% url "workload:pods" %}"   class="{% block nav-this-2-4 %}{% endblock %}">pods</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item">
+                <li class="layui-nav-item {% block nav-item-3 %}{% endblock %}">
                     <a href="javascript:;"><i class="layui-icon layui-icon-app"
                                               style="font-size: 15px;color: #1E9FFF;">&nbsp;&nbsp;</i>负载均衡</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">Services</a></dd>
-                        <dd><a href="javascript:;">Ingresses</a></dd>
+                        <dd><a href="{% url "loadbalancer:services" %}" class="{% block nav-this-3-1 %}{% endblock %}">Services</a></dd>
+                        <dd><a href="{% url "loadbalancer:ingresses" %}"  class="{% block nav-this-3-2 %}{% endblock %}">Ingresses</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">

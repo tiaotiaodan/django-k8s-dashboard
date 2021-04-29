@@ -12,6 +12,4 @@ urlpatterns = [
     re_path('^daemonsets_api/$',views.daemonsets_api, name="daemonsets_api"),
     re_path('^statefulsets_api/$', views.statefulsets_api, name="statefulsets_api"),
     re_path('^pods_api/$', views.pods_api, name="pods_api"),
-
 ]
-

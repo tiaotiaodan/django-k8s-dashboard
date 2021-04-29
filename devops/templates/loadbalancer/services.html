@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+<!--头部-->
+{% block title %} services节点 {% endblock %}
+<!-停留的样式-->
+<!--layui-nav-itemed 为开关-->
+{% block nav-item-3 %} layui-nav-itemed {% endblock %}
+
+<!--layui-this 停留的背景颜色-->
+{% block nav-this-3-1 %}layui-this {% endblock %}
+
+
+<!--内容-->
+{% block content %}
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="demo" lay-filter="test"></table>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+<!--js代码-->
+{% block js %}
+    <script type="text/html" id="toolbarDemo">
+        <!--增加一个输入框-->
+        <input type="text" name="name" class="layui-input" style="width: 150px;height: 30px;float: left">
+        <button class="layui-btn layui-btn-sm" style="float: left" id="searchBtn">搜索</button>
+        <button class="layui-btn layui-btn-sm" style="float: left" id="createBtn">创建</button>
+    </script>
+
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit">YAML</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <script>
+
+        // 获取当前命名空间
+        var storage = window.sessionStorage;
+        var namespace = storage.getItem("namespace");
+        console.log(namespace)
+
+
+        layui.use('table', function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var $ = layui.jquery;
+
+            table.render({
+                elem: '#demo'
+                , url: '{% url "loadbalancer:services_api" %}?namespace=' + namespace      // 调用接口数据，并返回全局命名空间值
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                    title: '提示'
+                    , layEvent: 'LAYTABLE_TIPS'
+                    , icon: 'layui-icon-tips'
+                }]
+                , title: '数据表'
+                , skin: 'line'         // 取消表格竖线
+                , cols: [[
+                    //{field: 'id', title: '序号', width: 80, fixed: 'left', type: 'numbers'},   // 序号排序，使用type：'numbers'
+                    {field: 'name', title: '名称', sort: true, width: 300}
+                    , {field: 'namespace', title: '命名空间', width: 200, sort: true}
+                    , {field: 'type', title: '类型', width: 120, sort: true}
+                    , {field: 'cluster_ip', title: '集群IP', width: 150}
+                    , {field: 'ports', title: '端口信息', templet: portsFormat}
+                    , {field: 'labels', title: '标签', templet: labelsFormat}
+                    , {field: 'selector', title: 'Pod 标签选择器', templet: selecotrFormat}
+                    , {field: 'endpoint', title: '后端 Pod'}
+                    , {field: 'create_time', title: '创建时间', width: 200}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+                ]]
+                , page: true      // 设置分页
+                , id: "svc"      // 设置表格重载， 这里使用必须是id："值"
+            });
+
+            function labelsFormat(d) {
+                result = "";
+                if (d.labels == null) {
+                    return "None"
+                } else {
+                    for (let key in d.labels) {
+                        result += '<span style="border: 1px solid #d6e5ec;border-radius: 8px">' +
+                            key + ':' + d.labels[key] +
+                            '</span><br>'
+                    }
+                    return result
+                }
+            }
+
+            function selecotrFormat(d) {
+                result = "";
+                for (let key in d.selector) {
+                    result += '<span style="border: 1px solid #d6e5ec;border-radius: 8px">' +
+                        key + ':' + d.selector[key] +
+                        '</span><br>'
+                }
+                return result
+            }
+
+            function portsFormat(d) {
+                result = "";
+                for (let key in d.ports) {
+                    data = d.ports[key];
+                    result += '名称: ' + data.port_name + '<br>' +
+                        '端口: ' + data.port + '<br>' +
+                        '协议: ' + data.protocol + '<br>' +
+                        '容器端口: ' + data.target_port + '<br>'
+                }
+                return result
+            }
+
+            //监听行工具事件
+            table.on('tool(test)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    console.log(data)
+                    layer.confirm('是否确定删除' + data["name"] + "这个命令空间吗", function (index) {
+                        csrf_token = $('[name=csrfmiddlewaretoken]').val();
+
+                        $.ajax({
+                            type: "DELETE",
+                            url: "{% url "loadbalancer:services_api" %}",
+                            data: data,
+                            headers: {"X-CSRFToken": csrf_token},
+                            success: function (res) {
+                                if (res.code == 0) {
+                                    layer.msg(res.msg, {icon: 6});
+                                    obj.del()  // 页面删除
+                                } else {
+                                    layer.msg(res.msg, {icon: 5})
+                                }
+                            },
+                            error: function () {
+
+                            },
+                        });
+                    });
+                } else if (obj.event === 'edit') {
+                    layer.prompt({
+                        formType: 2
+                        , value: data.email
+                    }, function (value, index) {
+                        obj.update({
+                            email: value
+                        });
+                        layer.close(index);
+                    });
+                }
+            });
+
+            // 搜索功能
+            $(document).on('click', '#searchBtn', function () {
+                // 获取搜索的值
+                var input_val = $('input[name=name]').val();
+
+                // 判断用户是点击搜索按钮是否有值，没有就刷新当前页面，获取所有，否则就返回后端接口，刷新
+                if (input_val == "" || input_val == null || input_val == undefined) { // "",null,undefined
+                    console.log("为空")
+                    window.parent.location.reload()
+                } else {
+                    table.reload('svc', {
+                        where: { //设定异步数据接口的额外参数，任意设
+                            // 要传回的key
+                            searchkey: input_val
+                        }
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    }); //只重载数据
+                }
+
+            });
+
+
+        });
+
+    </script>
+
+
+{% endblock %}
