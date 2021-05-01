@@ -12,7 +12,28 @@
 
 <!--内容-->
 {% block content %}
+    <div  id="modal"  style="display: none">
+        <form class="layui-form " action="">
+          <div class="layui-form-item" style="padding: 10px 100px 10px 10px">
+            <label class="layui-form-label">名称：</label>
+            <div class="layui-input-block">
+              <input type="text" name="name" lay-verify="required" lay-reqtext="名称是必填项!" autocomplete="off" class="layui-input">
+                <br><br>
+              <button type="button" class="layui-btn" lay-submit="" lay-filter="btn" style="margin-left: 25%">立即提交</button>
+            </div>
+          </div>
+        </form>
+    </div>
+
+
+
+    <!--数据表格-->
     <div class="layui-card">
+            <span class="layui-breadcrumb">
+              <a href="{% url "index" %}">首页</a>
+              <a href="#">kubernetes</a>
+              <a><cite>namespaces节点</cite></a>
+            </span>
         <div class="layui-card-body">
             <table id="demo" lay-filter="test"></table>
         </div>
@@ -38,9 +59,10 @@
 
 
     <script>
-        layui.use('table', function () {
+        layui.use(['table', 'layer', 'form'], function () {
             var table = layui.table;
             var layer = layui.layer;
+            var form = layui.form;
             var $ = layui.jquery;
 
             table.render({
@@ -118,7 +140,7 @@
             });
 
             // 搜索功能，使用document方式解决，只能搜索一次的问题
-            $(document).on('click','#searchBtn' ,function () {
+            $(document).on('click', '#searchBtn', function () {
                 // 获取搜索的值
                 var input_val = $('input[name=name]').val();
                 // 判断用户是点击搜索按钮是否有值，没有就刷新当前页面，获取所有，否则就返回后端接口，刷新
@@ -137,7 +159,43 @@
                 }
             });
 
+            // 绑定创建按钮事件
+            $('#createBtn').on('click', function () {
+                layer.open({
+                    title: "创建命名空间",
+                    type: 1,
+                    content: $('#modal').html(),
+                    success: function (index, layero) {
+                        form.on('submit(btn)', function (data) {
+                            data = data.field;
+                            csrf_token = $('[name="csrfmiddlewaretoken"]').val();
+                            data['csrfmiddlewaretoken'] = csrf_token;
+                            $.ajax({
+                                url: '{% url "namespace_api" %}',
+                                type: 'POST',
+                                data: data,
+                                dataType: 'json',
+                                // 提交成功回调函数
+                                success: function (res) {
+                                    if (res.code == '0') {
+                                        layer.msg(res.msg, {icon: 6});
 
+                                        // 刷新页面
+                                        window.location.reload();
+                                    } else {
+                                        layer.msg(res.msg, {icon: 5})
+                                    }
+                                },
+                                // 访问接口失败函数
+                                error: function (res) {
+                                    layer.msg("服务器接口异常！", {icon: 5})
+                                }
+                            })
+                        })
+
+                    }
+                })
+            })
         });
 
     </script>

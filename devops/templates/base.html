@@ -84,13 +84,13 @@
                         <dd><a href="{% url "loadbalancer:ingresses" %}"  class="{% block nav-this-3-2 %}{% endblock %}">Ingresses</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item">
+                <li class="layui-nav-item {% block nav-item-4 %}{% endblock %}">
                     <a href="javascript:;"><i class="layui-icon layui-icon-template-1"
                                               style="font-size: 15px;color: #1E9FFF;">&nbsp;&nbsp;</i>存储配置</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">Persistent Volume Claims</a></dd>
-                        <dd><a href="javascript:;">Config Maps</a></dd>
-                        <dd><a href="javascript:;">Secrets</a></dd>
+                        <dd><a href="{% url "storage:pvc" %}" class="{% block nav-this-4-1 %}{% endblock %}">Persistent Volume Claims</a></dd>
+                        <dd><a href="{% url "storage:configmaps" %}" class="{% block nav-this-4-2 %}{% endblock %}">Config Maps</a></dd>
+                        <dd><a href="{% url "storage:secrets" %}" class="{% block nav-this-4-3 %}{% endblock %}">Secrets</a></dd>
                     </dl>
                 </li>
             </ul>

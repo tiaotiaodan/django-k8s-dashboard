@@ -12,7 +12,14 @@
 
 <!--内容-->
 {% block content %}
+
+
     <div class="layui-card">
+        <span class="layui-breadcrumb">
+          <a href="{% url "index" %}">首页</a>
+          <a href="#">kubernetes</a>
+          <a><cite>node节点</cite></a>
+        </span>
         <div class="layui-card-body">
             <table id="demo" lay-filter="test"></table>
         </div>

@@ -65,3 +65,11 @@ def load_auth_config(auth_type,str):
         random_str = str
         file_path = os.path.join("kubeconfig",random_str)
         config.load_kube_config(r"%s" % file_path)
+
+
+
+# 时间格式化
+from datetime import  date,timedelta
+def dt_format(timestamp):
+    t = date.strftime((timestamp + timedelta(hours=8)),'%Y-%m-%d %H:%M:%S')
+    return  t

@@ -9,6 +9,7 @@ urlpatterns = [
     re_path('^PersistentVolumes/$',views.PersistentVolumes, name="PersistentVolumes"),
     re_path('^node_api/$',views.node_api, name="node_api"),
     re_path('^pv_api/$',views.pv_api, name="pv_api"),
+    re_path('^pv_create/$',views.pv_create, name="pv_create"),
 
 ]
 

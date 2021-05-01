@@ -27,5 +27,6 @@ urlpatterns = [
     path('k8s/', include(('k8s.urls', 'k8s'), namespace='k8s')),            # k8s模块
     path('workload/', include(('workload.urls', 'workload'), namespace='workload')),     # workload模块
     path('loadbalancer/', include(('loadbalancer.urls', 'loadbalancer'), namespace='loadbalancer')),    # loadbalancer模块
+    path('storage/', include(('storage.urls', 'storage'), namespace='storage')),    # storage模块，主要用于存储一些文件配置与存储
 ]
 

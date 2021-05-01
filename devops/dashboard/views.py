@@ -71,12 +71,12 @@ def logout(request):
 def namespace_api(request):
     code = 0
     msg = "执行数据返回成功"
+    auth_type = request.session.get("auth_type")
+    token = request.session.get("token")
+    k8s_tools.load_auth_config(auth_type, token)
+    core_api = client.CoreV1Api()
     # 命名空间选择和命名空间表格同时使用
     if request.method == "GET":
-        auth_type = request.session.get("auth_type")
-        token = request.session.get("token")
-        k8s_tools.load_auth_config(auth_type, token)
-        core_api = client.CoreV1Api()
 
         # 获取搜索分页的传回来的值
         search_key = request.GET.get("search_key")
@@ -87,9 +87,8 @@ def namespace_api(request):
             for i in core_api.list_namespace().items:
                 name = i.metadata.name
                 labels = i.metadata.labels
-                create_time = i.metadata.creation_timestamp
+                create_time = k8s_tools.dt_format(i.metadata.creation_timestamp)        # 使用函数规则，优化时间返回格式
                 namespace = {"name": name, 'labels': labels, 'create_time': create_time}
-
 
                 # 根据前端返回的搜索key进行判断，查询关键字返回数据
                 search_key = request.GET.get('searchkey', None)
@@ -130,6 +129,47 @@ def namespace_api(request):
 
         res = {"code": code, "msg": msg, "count": count, "data": data}
         return JsonResponse(res)
+
+    # 创建命名空间
+    elif request.method == "POST":
+        # 方法是一样的，
+        #   print(request.POST["name"])就算没有值也不会报错,返回none，
+        #   print(request.POST.get("name", None))取不到值就会报错，
+        # print(request.POST.get("name", None))
+        # print(request.POST["name"])
+        name = request.POST["name"]
+
+        # 判断命名空间是否存在
+        for i in core_api.list_namespace().items:
+            if name == i.metadata.name:
+                res = {'code':1, "msg":"命名空间已经存在！"}
+                return JsonResponse(res)
+
+        try:
+            # 创建k8s的模板
+            body = client.V1Namespace(
+                api_version="v1",
+                kind="Namespace",
+                metadata=client.V1ObjectMeta(
+                    name=name
+                )
+            )
+            core_api.create_namespace(body=body)
+            code = 0
+            msg = "创建成功"
+        except Exception as e:
+            code = 1
+            # 获取返回状态吗，进行数据判断
+            status = getattr(e, "status")
+            if status == 403:
+                msg = "没有创建权限"
+            else:
+                msg = "创建失败"
+        res = {"code": code, "msg": msg}
+        return  JsonResponse(res)
+
+
+    # namespace删除命名空间
     elif request.method == "DELETE":
         # 通过QueryDict 获取ajax提交提交的删除data返回参数
         request_data = QueryDict(request.body)

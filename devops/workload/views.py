@@ -58,7 +58,7 @@ def deployments_api(request):
                     image = dp.spec.template.spec.containers[0].image
                     images = "%s / %s" % (image, status)
 
-                create_time = dp.metadata.creation_timestamp
+                create_time = k8s_tools.dt_format(dp.metadata.creation_timestamp)
                 dp = {"name": name, "namespace": namespace, "replicas": replicas,
                       "available_replicas": available_replicas, "labels": labels, "selector": selector,
                       "images": images, "create_time": create_time}
@@ -133,7 +133,7 @@ def daemonsets_api(request):
                 containers = {}
                 for c in ds.spec.template.spec.containers:
                     containers[c.name] = c.image
-                create_time = ds.metadata.creation_timestamp
+                create_time = k8s_tools.dt_format(ds.metadata.creation_timestamp)
 
                 ds = {"name": name, "namespace": namespace, "labels": labels, "desired_number": desired_number,
                       "available_number": available_number,
@@ -211,7 +211,7 @@ def statefulsets_api(request):
                 containers = {}
                 for c in sts.spec.template.spec.containers:
                     containers[c.name] = c.image
-                create_time = sts.metadata.creation_timestamp
+                create_time = k8s_tools.dt_format(sts.metadata.creation_timestamp)
 
                 sts = {"name": name, "namespace": namespace, "labels": labels, "replicas": replicas,
                        "ready_replicas": ready_replicas, "service_name": service_name,
@@ -310,7 +310,7 @@ def pods_api(request):
                         c = {'c_name': c_name, 'c_image': c_image, 'restart_count': restart_count, 'c_status': c_status}
                         containers.append(c)
 
-                create_time = po.metadata.creation_timestamp
+                create_time = k8s_tools.dt_format(po.metadata.creation_timestamp)
 
                 po = {"name": name, "namespace": namespace, "pod_ip": pod_ip,
                       "labels": labels, "containers": containers, "status": status,

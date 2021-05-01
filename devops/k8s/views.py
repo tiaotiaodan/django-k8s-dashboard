@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse, QueryDict
+from django.http import JsonResponse, QueryDict,HttpResponse
 from kubernetes import client, config
 from devops import k8s_tools  # 导入k8s登陆封装
 
@@ -16,19 +16,24 @@ def namespaces(request):
 def PersistentVolumes(request):
     return render(request, "k8s/PersistentVolumes.html")
 
+# 创建pv页面
+def pv_create(request):
+    return render(request,"k8s/pv_create.html")
+
 
 # node_api接口
 def node_api(request):
     # 命名空间接口
     code = 0
     msg = "执行数据返回成功"
+    # 获取认证的信息
+    auth_type = request.session.get("auth_type")
+    token = request.session.get("token")
+    k8s_tools.load_auth_config(auth_type, token)
+    core_api = client.CoreV1Api()
     # 命名空间选择和命名空间表格同时使用
     if request.method == "GET":
-        # 获取认证的信息
-        auth_type = request.session.get("auth_type")
-        token = request.session.get("token")
-        k8s_tools.load_auth_config(auth_type, token)
-        core_api = client.CoreV1Api()
+
 
         # 获取搜索分页的传回来的值
         search_key = request.GET.get("search_key")
@@ -38,7 +43,6 @@ def node_api(request):
         try:
             # 查找node显示数据
             for i in core_api.list_node_with_http_info()[0].items:
-
                 name = i.metadata.name
                 labels = i.metadata.labels
                 status = i.status.conditions[-1].status
@@ -47,7 +51,8 @@ def node_api(request):
                 memory = i.status.capacity['memory']
                 kebelet_version = i.status.node_info.kubelet_version
                 cri_version = i.status.node_info.container_runtime_version
-                create_time = i.metadata.creation_timestamp
+                create_time = k8s_tools.dt_format(i.metadata.creation_timestamp)    # 优化时间返回格式
+
                 node = {"name": name, "labels": labels, "status": status,
                         "scheduler": scheduler, "cpu": cpu, "memory": memory,
                         "kebelet_version": kebelet_version, "cri_version": cri_version,
@@ -98,12 +103,6 @@ def node_api(request):
         # 通过变量获取name参数
         name = request_data.get("name")
 
-        # 认证系统
-        auth_type = request.session.get("auth_type")
-        token = request.session.get("token")
-        k8s_tools.load_auth_config(auth_type, token)
-        core_api = client.CoreV1Api()
-
         try:
             core_api.delete_node(name)  # 删除node节点
             code = 0
@@ -125,13 +124,14 @@ def pv_api(request):
     # 命名空间接口
     code = 0
     msg = "执行数据返回成功"
+    # 获取认证的信息
+    auth_type = request.session.get("auth_type")
+    token = request.session.get("token")
+    k8s_tools.load_auth_config(auth_type, token)
+    core_api = client.CoreV1Api()
     # 命名空间选择和命名空间表格同时使用
     if request.method == "GET":
-        # 获取认证的信息
-        auth_type = request.session.get("auth_type")
-        token = request.session.get("token")
-        k8s_tools.load_auth_config(auth_type, token)
-        core_api = client.CoreV1Api()
+
 
         # 获取搜索分页的传回来的值
         search_key = request.GET.get("search_key")
@@ -156,7 +156,7 @@ def pv_api(request):
                 else:
                     pvc = "未绑定"
                 storage_class = pv.spec.storage_class_name
-                create_time = pv.metadata.creation_timestamp
+                create_time = k8s_tools.dt_format(pv.metadata.creation_timestamp)      # 优化时间返回格式
                 pv = {"name": name, "capacity": capacity, "access_modes": access_modes,
                       "reclaim_policy": reclaim_policy, "status": status, "pvc": pvc,
                       "storage_class": storage_class, "create_time": create_time}
@@ -200,6 +200,44 @@ def pv_api(request):
 
         res = {"code": code, "msg": msg, "count": count, "data": data}
         return JsonResponse(res)
+
+    elif request.method == "POST":
+        # print(request.POST)   第一步是先查看全部参数，进行参数查看
+        name = request.POST.get("name", None)
+        capacity = request.POST.get("capacity", None)
+        access_mode = request.POST.get("access_mode", None)
+        storage_type = request.POST.get("storage_type", None)
+        server_ip = request.POST.get("server_ip", None)
+        mount_path = request.POST.get("mount_path", None)
+        try:
+            body = client.V1PersistentVolume(
+                api_version="v1",
+                kind="PersistentVolume",
+                metadata=client.V1ObjectMeta(name=name),
+                spec=client.V1PersistentVolumeSpec(
+                    capacity={'storage': capacity},
+                    access_modes=[access_mode],
+                    nfs=client.V1NFSVolumeSource(
+                        server=server_ip,
+                        path="/ifs/kubernetes/%s" % mount_path
+                    )
+                )
+            )
+            # 创建pv
+            core_api.create_persistent_volume(body=body)
+            code = 0
+            msg = "创建成功"
+        except Exception as e:
+            code = 1
+            # 获取返回状态吗，进行数据判断
+            status = getattr(e, "status")
+            if status == 403:
+                msg = "没有创建权限"
+            else:
+                msg = "创建失败"
+        res = {"code": code, "msg": msg}
+        return JsonResponse(res)
+
     elif request.method == "DELETE":
         # 通过QueryDict 获取ajax提交提交的删除data返回参数
         request_data = QueryDict(request.body)

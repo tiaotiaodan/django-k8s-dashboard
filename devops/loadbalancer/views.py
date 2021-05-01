@@ -46,7 +46,7 @@ def services_api(request):
                     ports.append(port)
 
                 selector = svc.spec.selector
-                create_time = svc.metadata.creation_timestamp
+                create_time = k8s_tools.dt_format(svc.metadata.creation_timestamp)
 
                 # 确认是否关联Pod
                 endpoint = ""
@@ -121,22 +121,23 @@ def ingresses_api(request):
         data = []
         try:
             for ing in networking_api.list_namespaced_ingress(namespace=namespace).items:
-                # print(ing)   打印ingresses所有的查询数据
+                # print(ing)    # 获取ingresses所有数据
                 name = ing.metadata.name
                 namespace = ing.metadata.namespace
                 labels = ing.metadata.labels
                 service = "None"
                 http_hosts = "None"
                 for h in ing.spec.rules:
+                    host = h.host
                     path = ("/" if h.http.paths[0].path is None else h.http.paths[0].path)
-                    print(h.http.paths[0].path)
                     service_name = h.http.paths[0].backend.service_name
                     '''
-                        根据字段进行取值
+                        根据查询结果查询数据
                         print(h.http.paths[0])          
                         print(h.http.paths[0].backend)
                         print(h.http.paths[0].backend.service_name)
                     '''
+
                     service_port = h.http.paths[0].backend.service_port
                     http_hosts = {'host': host, 'path': path, 'service_name': service_name,
                                   'service_port': service_port}
@@ -150,7 +151,7 @@ def ingresses_api(request):
                         secret_name = tls.secret_name
                         https_hosts = {'host': host, 'secret_name': secret_name}
 
-                create_time = ing.metadata.creation_timestamp
+                create_time = k8s_tools.dt_format(ing.metadata.creation_timestamp)
 
                 ing = {"name": name, "namespace": namespace, "labels": labels, "http_hosts": http_hosts,
                        "https_hosts": https_hosts, "service": service, "create_time": create_time}
