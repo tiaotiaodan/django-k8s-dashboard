@@ -5,6 +5,7 @@ from workload import views
 
 urlpatterns = [
     re_path('^deployments/$',views.deployments, name="deployments"),
+    re_path('^deployments_create/$',views.deployments_create, name="deployments_create"),
     re_path('^daemonsets/$',views.daemonsets, name="daemonsets"),
     re_path('^statefulsets/$',views.statefulsets, name="statefulsets"),
     re_path('^pods/$',views.pods, name="pods"),
