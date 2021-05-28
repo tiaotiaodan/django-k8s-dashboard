@@ -43,6 +43,11 @@
 
 
     <script>
+      // 获取当前命名空间
+        var storage = window.sessionStorage;
+        var namespace = storage.getItem("namespace");
+        console.log(namespace)
+
         layui.use('table', function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -62,12 +67,12 @@
                 , cols: [[
                     //{field: 'id', title: '序号', width: 80, fixed: 'left', type: 'numbers'},   // 序号排序，使用type：'numbers'
                     {field: 'name', title: '名称', width: 120, unresize: true, sort: true}
-                    , {field: 'capacity', title: '容量',width:80}
-                    , {field: 'access_modes', title: '访问模式',width:160}
-                    , {field: 'reclaim_policy', title: '回收策略',width:120}
-                    , {field: 'status', title: '状态',width:120}
+                    , {field: 'capacity', title: '容量', width: 80}
+                    , {field: 'access_modes', title: '访问模式', width: 160}
+                    , {field: 'reclaim_policy', title: '回收策略', width: 120}
+                    , {field: 'status', title: '状态', width: 120}
                     , {field: 'pvc', title: 'PVC名称'}
-                    , {field: 'storage_class', title: '存储类',templet: labelsFormat}
+                    , {field: 'storage_class', title: '存储类', templet: labelsFormat}
                     , {field: 'create_time', title: '创建时间'}
                     , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 160}
                 ]]
@@ -117,15 +122,12 @@
                         });
                     });
                 } else if (obj.event === 'edit') {
-                    layer.prompt({
-                        formType: 2
-                        , value: data.email
-                    }, function (value, index) {
-                        obj.update({
-                            email: value
-                        });
-                        layer.close(index);
-                    });
+                    layer.open({
+                        title: 'YAML',
+                        type: 2,
+                        area: ['50%', '60%'],
+                        content: "{% url 'ace_editor' %}?resource=PersistentVolumes&" + 'namespace=' + data['namespace'] + '&name=' + data['name'],
+                    })
                 }
             });
 

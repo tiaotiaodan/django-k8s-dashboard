@@ -12,16 +12,19 @@
 
 <!--内容-->
 {% block content %}
-    <div  id="modal"  style="display: none">
+    <div id="modal" style="display: none">
         <form class="layui-form " action="">
-          <div class="layui-form-item" style="padding: 10px 100px 10px 10px">
-            <label class="layui-form-label">名称：</label>
-            <div class="layui-input-block">
-              <input type="text" name="name" lay-verify="required" lay-reqtext="名称是必填项!" autocomplete="off" class="layui-input">
-                <br><br>
-              <button type="button" class="layui-btn" lay-submit="" lay-filter="btn" style="margin-left: 25%">立即提交</button>
+            <div class="layui-form-item" style="padding: 10px 100px 10px 10px">
+                <label class="layui-form-label">名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" lay-reqtext="名称是必填项!" autocomplete="off"
+                           class="layui-input">
+                    <br><br>
+                    <button type="button" class="layui-btn" lay-submit="" lay-filter="btn" style="margin-left: 25%">
+                        立即提交
+                    </button>
+                </div>
             </div>
-          </div>
         </form>
     </div>
 
@@ -59,6 +62,11 @@
 
 
     <script>
+   // 获取当前命名空间
+        var storage = window.sessionStorage;
+        var namespace = storage.getItem("namespace");
+        console.log(namespace)
+
         layui.use(['table', 'layer', 'form'], function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -127,15 +135,12 @@
                         });
                     });
                 } else if (obj.event === 'edit') {
-                    layer.prompt({
-                        formType: 2
-                        , value: data.email
-                    }, function (value, index) {
-                        obj.update({
-                            email: value
-                        });
-                        layer.close(index);
-                    });
+                    layer.open({
+                        title: 'YAML',
+                        type: 2,
+                        area: ['50%', '60%'],
+                        content: "{% url 'ace_editor' %}?resource=namespaces&" + 'namespace=' + data['namespace'] + '&name=' + data['name'],
+                    })
                 }
             });
 

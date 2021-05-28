@@ -145,14 +145,11 @@
                         });
                     });
                 } else if (obj.event === 'edit') {
-                    layer.prompt({
-                        formType: 2
-                        , value: data.email
-                    }, function (value, index) {
-                        obj.update({
-                            email: value
-                        });
-                        layer.close(index);
+                    layer.open({
+                        title: 'YAML',
+                        type: 2,
+                        area: ['60%', '60%'],
+                        content: "{% url 'ace_editor' %}?resource=daemonsets&" + 'namespace=' + data['namespace'] + '&name=' + data['name'],
                     });
                 }
             });

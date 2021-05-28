@@ -87,7 +87,7 @@ def namespace_api(request):
             for i in core_api.list_namespace().items:
                 name = i.metadata.name
                 labels = i.metadata.labels
-                create_time = k8s_tools.dt_format(i.metadata.creation_timestamp)        # 使用函数规则，优化时间返回格式
+                create_time = k8s_tools.dt_format(i.metadata.creation_timestamp)  # 使用函数规则，优化时间返回格式
                 namespace = {"name": name, 'labels': labels, 'create_time': create_time}
 
                 # 根据前端返回的搜索key进行判断，查询关键字返回数据
@@ -142,7 +142,7 @@ def namespace_api(request):
         # 判断命名空间是否存在
         for i in core_api.list_namespace().items:
             if name == i.metadata.name:
-                res = {'code':1, "msg":"命名空间已经存在！"}
+                res = {'code': 1, "msg": "命名空间已经存在！"}
                 return JsonResponse(res)
 
         try:
@@ -166,7 +166,7 @@ def namespace_api(request):
             else:
                 msg = "创建失败"
         res = {"code": code, "msg": msg}
-        return  JsonResponse(res)
+        return JsonResponse(res)
 
 
     # namespace删除命名空间
@@ -197,3 +197,150 @@ def namespace_api(request):
                 msg = "删除失败"
         res = {"code": code, "msg": msg}
         return JsonResponse(res)
+
+
+# 编写yaml获取数据接口
+def export_resource_api(request):
+    auth_type = request.session.get("auth_type")
+    token = request.session.get("token")
+    k8s_tools.load_auth_config(auth_type, token)
+    core_api = client.CoreV1Api()  # namespace, pod ,service,pv,pvc
+    apps_api = client.AppsV1Api()  # deployment
+    networking_api = client.NetworkingV1beta1Api()  # ingress
+    storage_api = client.StorageV1Api  # storage_class
+
+    namespace = request.GET.get("namespace", None)
+    resource = request.GET.get("resource", None)
+    name = request.GET.get("name", None)
+    import yaml, json  # 导入yaml模块使用
+
+    # 获取deployment点击yaml数据
+    if resource == "namespaces":
+        try:
+            # 坑，不要写py测试，print会二次处理影响结果，到时测试不通
+            result = core_api.read_namespace(name=name, _preload_content=False).read()
+            result = str(result, "utf-8")  # bytes转字符串
+            result = yaml.safe_dump(json.loads(result))  # str/dict -> json -> yaml
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "deployments":
+        try:
+            result = apps_api.read_namespaced_deployment(name=name, namespace=namespace, _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "replicaset":
+        try:
+            result = apps_api.read_namespaced_replica_set(name=name, namespace=namespace, _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "daemonsets":
+        try:
+            result = apps_api.read_namespaced_daemon_set(name=name, namespace=namespace, _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "statefulsets":
+        try:
+            result = apps_api.read_namespaced_stateful_set(name=name, namespace=namespace,_preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "pods":
+        try:
+            result = core_api.read_namespaced_pod(name=name, namespace=namespace, _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "service":
+        try:
+            result = core_api.read_namespaced_service(name=name, namespace=namespace, _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "ingress":
+        try:
+            result = networking_api.read_namespaced_ingress(name=name, namespace=namespace,
+                                                            _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "pvc":
+        try:
+            result = core_api.read_namespaced_persistent_volume_claim(name=name, namespace=namespace,
+                                                                      _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "PersistentVolumes":
+        try:
+            result = core_api.read_persistent_volume(name=name, _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "node":
+        try:
+            result = core_api.read_node(name=name, _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "configmap":
+        try:
+            result = core_api.read_namespaced_config_map(name=name, namespace=namespace, _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    elif resource == "secret":
+        try:
+            result = core_api.read_namespaced_secret(name=name, namespace=namespace, _preload_content=False).read()
+            result = str(result, "utf-8")
+            result = yaml.safe_dump(json.loads(result))
+        except Exception as e:
+            code = 1
+            msg = e
+    code = 0
+    msg = "数据获取成功"
+    res = {"code": code, "msg": msg, "data": result}
+    return JsonResponse(res)
+
+
+# 返回yaml页面
+
+# 允许跨站访问
+from django.views.decorators.clickjacking import xframe_options_exempt
+
+
+@xframe_options_exempt
+def ace_editor(request):
+    d = {}
+    namespace = request.GET.get("namespace", None)
+    resource = request.GET.get("resource", None)
+    name = request.GET.get("name", None)
+    d['namespace'] = namespace
+    d['resource'] = resource
+    d['name'] = name
+    return render(request, "ace_editor.html", {'data': d})
