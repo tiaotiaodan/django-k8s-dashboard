@@ -26,6 +26,7 @@ def services_api(request):
         data = []
         try:
             for svc in core_api.list_namespaced_service(namespace=namespace).items:
+                print(svc)
                 name = svc.metadata.name
                 namespace = svc.metadata.namespace
                 labels = svc.metadata.labels

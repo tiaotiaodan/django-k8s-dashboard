@@ -40,7 +40,9 @@
 
     <script type="text/html" id="barDemo">
         <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit">YAML</a>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="details">详情</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
     </script>
 
 
@@ -62,17 +64,16 @@
                 , title: '数据表'
                 , skin: 'line'         // 取消表格竖线
                 , cols: [[
-                    //{field: 'id', title: '序号', width: 80, fixed: 'left', type: 'numbers'},   // 序号排序，使用type：'numbers'
-                    {field: 'name', title: '名称', width: 120, unresize: true, sort: true}
-                    , {field: 'labels', title: '标签', templet: labelsFormat, width: 270}
-                    , {field: 'status', title: '准备就绪', width: 100}
-                    , {field: 'scheduler', title: '可调度', width: 80}
-                    , {field: 'cpu', title: 'CPU', width: 60}
-                    , {field: 'memory', title: '内存', width: 120}
-                    , {field: 'kebelet_version', title: 'kubelet版本', width: 80}
-                    , {field: 'cri_version', title: 'CRI版本', width: 140}
+                    {field: 'name', title: '名称', sort: true}
+                    , {field: 'labels', title: '标签', templet: labelsFormat}
+                    , {field: 'status', title: '准备就绪'}
+                    , {field: 'scheduler', title: '可调度'}
+                    , {field: 'cpu', title: 'CPU'}
+                    , {field: 'memory', title: '内存'}
+                    , {field: 'kebelet_version', title: 'kubelet版本'}
+                    , {field: 'cri_version', title: 'CRI版本'}
                     , {field: 'create_time', title: '创建时间'}
-                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 160}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 180}
                 ]]
                 , page: true      // 设置分页
                 , id: "ntb"      // 设置表格重载， 这里使用必须是id："值"
@@ -118,20 +119,17 @@
                         });
                     });
                 } else if (obj.event === 'edit') {
-                    layer.prompt({
-                        formType: 2
-                        , value: data.email
-                    }, function (value, index) {
-                        obj.update({
-                            email: value
-                        });
-                        layer.close(index);
+                    layer.open({
+                        title: 'YAML',
+                        type: 2,
+                        area: ['60%', '60%'],
+                        content: "{% url 'ace_editor' %}?resource=nodes&" + 'namespace=' + data['namespace'] + '&name=' + data['name'],
                     });
                 }
             });
 
             // 搜索功能
-            $(document).on('click','#searchBtn' ,function () {
+            $(document).on('click', '#searchBtn', function () {
                 // 获取搜索的值
                 var input_val = $('input[name=name]').val();
 

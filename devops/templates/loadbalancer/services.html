@@ -61,9 +61,8 @@
                 , title: '数据表'
                 , skin: 'line'         // 取消表格竖线
                 , cols: [[
-                    //{field: 'id', title: '序号', width: 80, fixed: 'left', type: 'numbers'},   // 序号排序，使用type：'numbers'
-                    {field: 'name', title: '名称', sort: true, width: 300}
-                    , {field: 'namespace', title: '命名空间', width: 200, sort: true}
+                    {field: 'name', title: '名称', sort: true, width: 100}
+                    , {field: 'namespace', title: '命名空间', width: 100, sort: true}
                     , {field: 'type', title: '类型', width: 120, sort: true}
                     , {field: 'cluster_ip', title: '集群IP', width: 150}
                     , {field: 'ports', title: '端口信息', templet: portsFormat}
@@ -141,14 +140,11 @@
                         });
                     });
                 } else if (obj.event === 'edit') {
-                    layer.prompt({
-                        formType: 2
-                        , value: data.email
-                    }, function (value, index) {
-                        obj.update({
-                            email: value
-                        });
-                        layer.close(index);
+                    layer.open({
+                        title: 'YAML',
+                        type: 2,
+                        area: ['60%', '60%'],
+                        content: "{% url 'ace_editor' %}?resource=services&" + 'namespace=' + data['namespace'] + '&name=' + data['name'],
                     });
                 }
             });

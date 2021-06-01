@@ -264,7 +264,7 @@ def export_resource_api(request):
         except Exception as e:
             code = 1
             msg = e
-    elif resource == "service":
+    elif resource == "services":
         try:
             result = core_api.read_namespaced_service(name=name, namespace=namespace, _preload_content=False).read()
             result = str(result, "utf-8")
@@ -272,10 +272,9 @@ def export_resource_api(request):
         except Exception as e:
             code = 1
             msg = e
-    elif resource == "ingress":
+    elif resource == "ingresses":
         try:
-            result = networking_api.read_namespaced_ingress(name=name, namespace=namespace,
-                                                            _preload_content=False).read()
+            result = networking_api.read_namespaced_ingress(name=name, namespace=namespace,_preload_content=False).read()
             result = str(result, "utf-8")
             result = yaml.safe_dump(json.loads(result))
         except Exception as e:
@@ -283,8 +282,7 @@ def export_resource_api(request):
             msg = e
     elif resource == "pvc":
         try:
-            result = core_api.read_namespaced_persistent_volume_claim(name=name, namespace=namespace,
-                                                                      _preload_content=False).read()
+            result = core_api.read_namespaced_persistent_volume_claim(name=name, namespace=namespace,_preload_content=False).read()
             result = str(result, "utf-8")
             result = yaml.safe_dump(json.loads(result))
         except Exception as e:
@@ -298,7 +296,7 @@ def export_resource_api(request):
         except Exception as e:
             code = 1
             msg = e
-    elif resource == "node":
+    elif resource == "nodes":
         try:
             result = core_api.read_node(name=name, _preload_content=False).read()
             result = str(result, "utf-8")
@@ -306,7 +304,7 @@ def export_resource_api(request):
         except Exception as e:
             code = 1
             msg = e
-    elif resource == "configmap":
+    elif resource == "configmaps":
         try:
             result = core_api.read_namespaced_config_map(name=name, namespace=namespace, _preload_content=False).read()
             result = str(result, "utf-8")
@@ -314,7 +312,7 @@ def export_resource_api(request):
         except Exception as e:
             code = 1
             msg = e
-    elif resource == "secret":
+    elif resource == "secrets":
         try:
             result = core_api.read_namespaced_secret(name=name, namespace=namespace, _preload_content=False).read()
             result = str(result, "utf-8")

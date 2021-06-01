@@ -18,10 +18,17 @@ def deployments_create(request):
 def daemonsets(request):
     return render(request, "workload/daemonsets.html")
 
+# daemonsets_create 创建页面
+def daemonsets_create(request):
+    return render(request, "workload/daemonsets_create.html")
 
 # statefulset 页面展示
 def statefulsets(request):
     return render(request, "workload/statefulsets.html")
+
+# statefulsets_create 创建页面
+def statefulsets_create(request):
+    return render(request, "workload/statefulsets_create.html")
 
 # pods 页面展示
 def pods(request):
@@ -96,7 +103,6 @@ def deployments_api(request):
         res = {'code': code, 'msg': msg, 'count': count, 'data': data}
         return JsonResponse(res)
     elif request.method == "POST":
-        print(request.POST)
         name = request.POST.get("name", None)
         namespace = request.POST.get("namespace", None)
         image = request.POST.get("image", None)
@@ -112,8 +118,7 @@ def deployments_api(request):
             res = {"code": 1, "msg": "标签格式错误！"}
             return JsonResponse(res)
         resources = request.POST.get("resources", None)
-        health_liveness = request.POST.get("health[liveness]",
-                                           None)  # {'health[liveness]': ['on'], 'health[readiness]': ['on']}
+        health_liveness = request.POST.get("health[liveness]",None)  # {'health[liveness]': ['on'], 'health[readiness]': ['on']}
         health_readiness = request.POST.get("health[readiness]", None)
 
         # 判断配置
@@ -258,6 +263,91 @@ def daemonsets_api(request):
 
         res = {'code': code, 'msg': msg, 'count': count, 'data': data}
         return JsonResponse(res)
+    elif request.method == "POST":
+        name = request.POST.get("name", None)
+        namespace = request.POST.get("namespace", None)
+        image = request.POST.get("image", None)
+        #replicas = int(request.POST.get("replicas", None))    #daemonset 不需要设置副本数，默认根据node节点创建，这里就禁用了
+        # 处理标签
+        labels = {}
+        try:
+            for l in request.POST.get("labels", None).split(","):
+                k = l.split("=")[0]
+                v = l.split("=")[1]
+                labels[k] = v
+        except Exception as e:
+            res = {"code": 1, "msg": "标签格式错误！"}
+            return JsonResponse(res)
+        resources = request.POST.get("resources", None)
+        health_liveness = request.POST.get("health[liveness]", None)  # {'health[liveness]': ['on'], 'health[readiness]': ['on']}
+        health_readiness = request.POST.get("health[readiness]", None)
+
+        # 判断配置
+        if resources == "1c2g":
+            resources = client.V1ResourceRequirements(limits={"cpu": "1", "memory": "2Gi"},
+                                                      requests={"cpu": "0.9", "memory": "1.9Gi"})
+        elif resources == "2c4g":
+            resources = client.V1ResourceRequirements(limits={"cpu": "2", "memory": "4Gi"},
+                                                      requests={"cpu": "1.9", "memory": "3.9Gi"})
+        elif resources == "4c8g":
+            resources = client.V1ResourceRequirements(limits={"cpu": "4", "memory": "8Gi"},
+                                                      requests={"cpu": "3.9", "memory": "7.9Gi"})
+        else:
+            resources = client.V1ResourceRequirements(limits={"cpu": "500m", "memory": "1Gi"},
+                                                      requests={"cpu": "450m", "memory": "900Mi"})
+        # 就绪检查和存活检查
+        liveness_probe = ""
+        if health_liveness == "on":
+            liveness_probe = client.V1Probe(http_get="/", timeout_seconds=30, initial_delay_seconds=30)
+        readiness_probe = ""
+        if health_readiness == "on":
+            readiness_probe = client.V1Probe(http_get="/", timeout_seconds=30, initial_delay_seconds=30)
+
+        # 判断是否存在
+        for dp in apps_api.list_namespaced_deployment(namespace=namespace).items:
+            if name == dp.metadata.name:
+                res = {"code": 1, "msg": "Deployment已经存在！"}
+                return JsonResponse(res)
+
+        # 创建模板
+        body = client.V1DaemonSet(
+            api_version="apps/v1",
+            kind="DaemonSet",
+            metadata=client.V1ObjectMeta(name=name),
+            spec=client.V1DaemonSetSpec(
+                # replicas=replicas,                      # #daemonset 不需要设置副本数，默认根据node节点创建, 这里就禁用了
+                selector={'matchLabels': labels},
+                template=client.V1PodTemplateSpec(
+                    metadata=client.V1ObjectMeta(labels=labels),
+                    spec=client.V1PodSpec(
+                        containers=[client.V1Container(
+                            # https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/V1Container.md
+                            name="web",
+                            image=image,
+                            env=[{"name": "TEST", "value": "123"}, {"name": "DEV", "value": "456"}],
+                            ports=[client.V1ContainerPort(container_port=80)],
+                            # liveness_probe=liveness_probe,
+                            # readiness_probe=readiness_probe,
+                            resources=resources,
+                        )]
+                    )
+                ),
+            )
+        )
+        try:
+            apps_api.create_namespaced_daemon_set(namespace=namespace, body=body)
+            code = 0
+            msg = "创建成功."
+        except Exception as e:
+            print(e)
+            code = 1
+            status = getattr(e, "status")
+            if status == 403:
+                msg = "没有访问权限！"
+            else:
+                msg = "创建失败！"
+        res = {'code': code, 'msg': msg}
+        return JsonResponse(res)
 
     elif request.method == "DELETE":
         request_data = QueryDict(request.body)
@@ -335,6 +425,112 @@ def statefulsets_api(request):
 
         res = {'code': code, 'msg': msg, 'count': count, 'data': data}
         return JsonResponse(res)
+    elif request.method == "POST":
+        name = request.POST.get("name", None)
+        namespace = request.POST.get("namespace", None)
+        image = request.POST.get("image", None)
+        replicas = int(request.POST.get("replicas", None))
+        # 处理标签
+        labels = {}
+        try:
+            for l in request.POST.get("labels", None).split(","):
+                k = l.split("=")[0]
+                v = l.split("=")[1]
+                labels[k] = v
+        except Exception as e:
+            res = {"code": 1, "msg": "标签格式错误！"}
+            return JsonResponse(res)
+        resources = request.POST.get("resources", None)
+        health_liveness = request.POST.get("health[liveness]",
+                                           None)  # {'health[liveness]': ['on'], 'health[readiness]': ['on']}
+        health_readiness = request.POST.get("health[readiness]", None)
+
+        # 判断配置
+        if resources == "1c2g":
+            resources = client.V1ResourceRequirements(limits={"cpu": "1", "memory": "2Gi"},
+                                                      requests={"cpu": "0.9", "memory": "1.9Gi"})
+        elif resources == "2c4g":
+            resources = client.V1ResourceRequirements(limits={"cpu": "2", "memory": "4Gi"},
+                                                      requests={"cpu": "1.9", "memory": "3.9Gi"})
+        elif resources == "4c8g":
+            resources = client.V1ResourceRequirements(limits={"cpu": "4", "memory": "8Gi"},
+                                                      requests={"cpu": "3.9", "memory": "7.9Gi"})
+        else:
+            resources = client.V1ResourceRequirements(limits={"cpu": "500m", "memory": "1Gi"},
+                                                      requests={"cpu": "450m", "memory": "900Mi"})
+        # 就绪检查和存活检查
+        liveness_probe = ""
+        if health_liveness == "on":
+            liveness_probe = client.V1Probe(http_get="/", timeout_seconds=30, initial_delay_seconds=30)
+        readiness_probe = ""
+        if health_readiness == "on":
+            readiness_probe = client.V1Probe(http_get="/", timeout_seconds=30, initial_delay_seconds=30)
+
+        # 判断是否存在
+        for dp in apps_api.list_namespaced_deployment(namespace=namespace).items:
+            if name == dp.metadata.name:
+                res = {"code": 1, "msg": "Deployment已经存在！"}
+                return JsonResponse(res)
+
+        # 创建模板
+        body = client.V1Deployment(
+            api_version="apps/v1",
+            kind="StatefulSet",
+            metadata=client.V1ObjectMeta(name=name),
+            spec=client.V1DeploymentSpec(
+                replicas=replicas,
+                selector={'matchLabels': labels},
+                template=client.V1PodTemplateSpec(
+                    metadata=client.V1ObjectMeta(labels=labels),
+                    spec=client.V1PodSpec(
+                        containers=[client.V1Container(
+                            # https://github.com/kubernetes-client/python/blob/master/kubernetes/docs/V1Container.md
+                            name="web",
+                            image=image,
+                            env=[{"name": "TEST", "value": "123"}, {"name": "DEV", "value": "456"}],
+                            ports=[client.V1ContainerPort(container_port=80)],
+                            # liveness_probe=liveness_probe,
+                            # readiness_probe=readiness_probe,
+                            resources=resources,
+                        )]
+                    )
+                ),
+            )
+        )
+        try:
+            apps_api.create_namespaced_stateful_set(namespace=namespace, body=body)
+            code = 0
+            msg = "创建成功."
+        except Exception as e:
+            print(e)
+            code = 1
+            status = getattr(e, "status")
+            if status == 403:
+                msg = "没有访问权限！"
+            else:
+                msg = "创建失败！"
+        res = {'code': code, 'msg': msg}
+        return JsonResponse(res)
+
+    elif request.method == "DELETE":
+        request_data = QueryDict(request.body)
+        name = request_data.get("name")
+        namespace = request_data.get("namespace")  # 获取命名空间
+        try:
+            apps_api.delete_namespaced_stateful_set(namespace=namespace, name=name)  # 删除命名空间下的deployment服务
+            code = 0
+            msg = "删除成功."
+        except Exception as e:
+            print(e)
+            code = 1
+            status = getattr(e, "status")
+            if status == 403:
+                msg = "没有删除权限"
+            else:
+                msg = "删除失败！"
+        res = {'code': code, 'msg': msg}
+        return JsonResponse(res)
+
 
     elif request.method == "DELETE":
         request_data = QueryDict(request.body)
