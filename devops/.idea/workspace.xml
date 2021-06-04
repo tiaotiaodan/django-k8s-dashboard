@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b162bbb3-d82a-4778-80a1-e3d444a2490c" name="默认更改列表" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/loadbalancer/services_create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/loadbalancer/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/loadbalancer/urls.py" afterDir="false" />
-    </list>
+    <list default="true" id="b162bbb3-d82a-4778-80a1-e3d444a2490c" name="默认更改列表" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -358,7 +354,7 @@
       <workItem from="1620270195177" duration="2074000" />
       <workItem from="1621845896867" duration="2457000" />
       <workItem from="1621911425022" duration="39861000" />
-      <workItem from="1622553575492" duration="2852000" />
+      <workItem from="1622553575492" duration="2868000" />
     </task>
     <servers />
   </component>
@@ -368,7 +364,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="198081000" />
+    <option name="totallyTimeSpent" value="198097000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -387,7 +383,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49928468" visible="true" weight="0.3058985" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49928468" weight="0.3058985" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
