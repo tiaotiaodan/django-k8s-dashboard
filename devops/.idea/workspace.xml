@@ -2,24 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b162bbb3-d82a-4778-80a1-e3d444a2490c" name="默认更改列表" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/workload/daemonsets_create.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/workload/statefulsets_create.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/loadbalancer/services_create.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/loadbalancer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/loadbalancer/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/k8s/namespaces.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/k8s/namespaces.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/k8s/nodes.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/k8s/nodes.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/loadbalancer/ingresses.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/loadbalancer/ingresses.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/loadbalancer/services.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/loadbalancer/services.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/storage/configmaps.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/storage/configmaps.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/storage/pvc.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/storage/pvc.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/storage/secrets.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/storage/secrets.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/workload/daemonsets.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/workload/daemonsets.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/workload/deployments.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/workload/deployments.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/workload/pods.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/workload/pods.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/workload/statefulsets.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/workload/statefulsets.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workload/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/workload/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workload/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/workload/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loadbalancer/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/loadbalancer/urls.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/workload/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="369">
-              <caret line="651" lean-forward="true" selection-start-line="651" selection-end-line="651" />
+            <state relative-caret-position="989">
+              <caret line="486" column="30" selection-start-line="486" selection-start-column="30" selection-end-line="486" selection-end-column="116" />
               <folding>
                 <element signature="e#0#45#0" expanded="true" />
               </folding>
@@ -45,12 +30,54 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/k8s/views.py">
+        <entry file="file://$PROJECT_DIR$/templates/loadbalancer/services_create.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="212" column="25" selection-start-line="212" selection-start-column="19" selection-end-line="212" selection-end-column="25" />
+            <state relative-caret-position="-1371">
+              <caret line="16" column="35" selection-start-line="16" selection-start-column="35" selection-end-line="16" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/devops/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="411">
+              <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
               <folding>
-                <element signature="e#0#35#0" expanded="true" />
+                <element signature="e#630#662#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/loadbalancer/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+              <folding>
+                <element signature="e#1#37#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/loadbalancer/services.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1185">
+              <caret line="79" column="28" lean-forward="true" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/loadbalancer/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="487">
+              <caret line="57" column="40" lean-forward="true" selection-start-line="57" selection-start-column="40" selection-end-line="57" selection-end-column="40" />
+              <folding>
+                <element signature="e#0#45#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -81,7 +108,6 @@
         <option value="$PROJECT_DIR$/templates/workload/daemonset.html" />
         <option value="$PROJECT_DIR$/templates/workload/statefulset.html" />
         <option value="$PROJECT_DIR$/templates/loadbalancer/service.html" />
-        <option value="$PROJECT_DIR$/loadbalancer/urls.py" />
         <option value="$PROJECT_DIR$/storage/urls.py" />
         <option value="$PROJECT_DIR$/templates/base.html" />
         <option value="$PROJECT_DIR$/templates/index.html" />
@@ -114,6 +140,8 @@
         <option value="$PROJECT_DIR$/loadbalancer/views.py" />
         <option value="$PROJECT_DIR$/k8s/views.py" />
         <option value="$PROJECT_DIR$/workload/views.py" />
+        <option value="$PROJECT_DIR$/templates/loadbalancer/services_create.html" />
+        <option value="$PROJECT_DIR$/loadbalancer/urls.py" />
       </list>
     </option>
   </component>
@@ -130,7 +158,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -141,7 +168,7 @@
             <path>
               <item name="devops" type="b2602c69:ProjectViewProjectNode" />
               <item name="devops" type="462c0819:PsiDirectoryNode" />
-              <item name="k8s" type="462c0819:PsiDirectoryNode" />
+              <item name="devops" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="devops" type="b2602c69:ProjectViewProjectNode" />
@@ -168,19 +195,21 @@
             <path>
               <item name="devops" type="b2602c69:ProjectViewProjectNode" />
               <item name="devops" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
               <item name="workload" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/workload" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/loadbalancer" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -192,19 +221,19 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/templates/workload" />
-      <recent name="$PROJECT_DIR$/storage" />
-      <recent name="$PROJECT_DIR$/loadbalancer" />
-      <recent name="$PROJECT_DIR$/workload" />
-      <recent name="$PROJECT_DIR$/k8s" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/static" />
       <recent name="$PROJECT_DIR$/templates" />
       <recent name="$PROJECT_DIR$/kubeconfig" />
       <recent name="$PROJECT_DIR$/static/img" />
       <recent name="$PROJECT_DIR$/test" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates/loadbalancer" />
+      <recent name="$PROJECT_DIR$/templates/workload" />
+      <recent name="$PROJECT_DIR$/storage" />
+      <recent name="$PROJECT_DIR$/loadbalancer" />
+      <recent name="$PROJECT_DIR$/workload" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -329,6 +358,7 @@
       <workItem from="1620270195177" duration="2074000" />
       <workItem from="1621845896867" duration="2457000" />
       <workItem from="1621911425022" duration="39861000" />
+      <workItem from="1622553575492" duration="2852000" />
     </task>
     <servers />
   </component>
@@ -338,7 +368,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="195229000" />
+    <option name="totallyTimeSpent" value="198081000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -352,7 +382,7 @@
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="821" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21030043" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21316166" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -419,16 +449,6 @@
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/virtualenvs/k8s/lib/python3.9/site-packages/kubernetes/client/api/apps_v1_api.py" />
-    <entry file="file://$PROJECT_DIR$/loadbalancer/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="1" lean-forward="true" selection-end-line="12" />
-          <folding>
-            <element signature="e#1#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/storage/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -486,16 +506,6 @@
           <caret line="65" column="57" lean-forward="true" selection-start-line="65" selection-start-column="57" selection-end-line="65" selection-end-column="57" />
           <folding>
             <element signature="e#78#114#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/devops/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="19" lean-forward="true" selection-end-line="35" />
-          <folding>
-            <element signature="e#630#662#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -626,29 +636,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/loadbalancer/services.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="79" column="28" lean-forward="true" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dashboard/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-916">
           <caret line="70" column="27" lean-forward="true" selection-start-line="70" selection-start-column="27" selection-end-line="70" selection-end-column="27" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/loadbalancer/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="28" column="25" selection-start-line="28" selection-start-column="25" selection-end-line="28" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -665,7 +658,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/k8s/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
+        <state relative-caret-position="1912">
           <caret line="212" column="25" selection-start-line="212" selection-start-column="19" selection-end-line="212" selection-end-column="25" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
@@ -673,12 +666,56 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/workload/views.py">
+    <entry file="file://$PROJECT_DIR$/loadbalancer/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="651" lean-forward="true" selection-start-line="651" selection-end-line="651" />
+        <state relative-caret-position="487">
+          <caret line="57" column="40" lean-forward="true" selection-start-line="57" selection-start-column="40" selection-end-line="57" selection-end-column="40" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/workload/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="989">
+          <caret line="486" column="30" selection-start-line="486" selection-start-column="30" selection-end-line="486" selection-end-column="116" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/loadbalancer/services.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1185">
+          <caret line="79" column="28" lean-forward="true" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/loadbalancer/services_create.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1371">
+          <caret line="16" column="35" selection-start-line="16" selection-start-column="35" selection-end-line="16" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/devops/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="411">
+          <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
+          <folding>
+            <element signature="e#630#662#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/loadbalancer/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#1#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
