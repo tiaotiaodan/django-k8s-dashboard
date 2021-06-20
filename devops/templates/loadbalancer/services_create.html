@@ -39,13 +39,6 @@
                   <input type="text" name="image" lay-verify="required" lay-reqtext="镜像是必填项，不能为空！" placeholder="" autocomplete="off" class="layui-input">
                 </div>
             </div>
-{##}
-{#            <div class="layui-form-item">#}
-{#                <label class="layui-form-label">副本数：</label>#}
-{#                <div class="layui-input-block">#}
-{#                  <input type="text" name="replicas" value="3" autocomplete="off" class="layui-input">#}
-{#                </div>#}
-{#            </div>#}
 
             <div class="layui-form-item">
                 <label class="layui-form-label">标签：</label>
@@ -110,7 +103,7 @@ layui.use(['table','form','layer'], function(){
       csrf_token = $('[name="csrfmiddlewaretoken"]').val();
       data['csrfmiddlewaretoken'] = csrf_token;
         $.ajax({
-            url: '{% url 'workload:daemonsets_api' %}',
+            url: '{% url 'loadbalancer:services_api' %}',
             type: "POST",
             data: data,
             success: function (res) {

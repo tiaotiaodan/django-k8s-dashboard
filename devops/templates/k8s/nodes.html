@@ -125,7 +125,10 @@
                         area: ['60%', '60%'],
                         content: "{% url 'ace_editor' %}?resource=nodes&" + 'namespace=' + data['namespace'] + '&name=' + data['name'],
                     });
-                }
+                } else  if (obj.event === 'details') {
+                    // 使用前端的Windows跳转
+                    window.location.href = "{% url 'k8s:node_details' %}?node_name=" + data["name"]
+                };
             });
 
             // 搜索功能

@@ -6,19 +6,23 @@ from devops import k8s_tools  # 导入k8s登陆封装
 
 
 # pvc 页面展示
+@k8s_tools.self_login_required
 def pvc(request):
     return render(request, "storage/pvc.html")
 
 # configmaps 页面展示
+@k8s_tools.self_login_required
 def configmaps(request):
     return render(request, "storage/configmaps.html")
 
 # secrets 页面展示
+@k8s_tools.self_login_required
 def secrets(request):
     return render(request, "storage/secrets.html")
 
 
 # pvc_api 接口
+@k8s_tools.self_login_required
 def pvc_api(request):
     code = 0
     msg = ""
@@ -92,6 +96,7 @@ def pvc_api(request):
         return JsonResponse(res)
 
 # configmaps_api 接口
+@k8s_tools.self_login_required
 def configmaps_api(request):
     code = 0
     msg = ""
@@ -159,6 +164,7 @@ def configmaps_api(request):
 
 
 # secrets_api 接口
+@k8s_tools.self_login_required
 def secrets_api(request):
     code = 0
     msg = ""

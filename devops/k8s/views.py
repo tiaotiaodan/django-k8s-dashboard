@@ -2,26 +2,138 @@ from django.shortcuts import render
 from django.http import JsonResponse, QueryDict,HttpResponse
 from kubernetes import client, config
 from devops import k8s_tools  # 导入k8s登陆封装
-
+from dashboard import node_data   # 导入详情计算模块
 
 # Create your views here.
+@k8s_tools.self_login_required
 def nodes(request):
     return render(request, "k8s/nodes.html")
+@k8s_tools.self_login_required
+def node_details(request):
+    auth_type = request.session.get("auth_type")
+    token = request.session.get("token")
+    k8s_tools.load_auth_config(auth_type, token)
+    core_api = client.CoreV1Api()
+
+    node_name = request.GET.get("node_name", None)
+    n_r = node_data.node_resource(core_api, node_name)
+    n_i = node_data.node_info(core_api, node_name)
+
+    return render(request, 'k8s/node_details.html', {"node_name": node_name,"node_resouces": n_r, "node_info": n_i})
 
 
+@k8s_tools.self_login_required
+def node_details_pod_list(request):
+    auth_type = request.session.get("auth_type")
+    token = request.session.get("token")
+    k8s_tools.load_auth_config(auth_type, token)
+    core_api = client.CoreV1Api()
+
+    node_name = request.GET.get("node_name", None)
+
+    data = []
+    try:
+        for pod in core_api.list_pod_for_all_namespaces().items:
+            name = pod.spec.node_name
+            pod_name = pod.metadata.name
+            namespace = pod.metadata.namespace
+            status = ("运行中" if pod.status.conditions[-1].status else "异常")
+            host_network = pod.spec.host_network
+            pod_ip = ( "主机网络" if host_network else pod.status.pod_ip)
+            create_time = k8s_tools.dt_format(pod.metadata.creation_timestamp)
+
+            if name == node_name:
+                if len(pod.spec.containers) == 1:
+                    cpu_requests = "0"
+                    cpu_limits = "0"
+                    memory_requests = "0"
+                    memory_limits = "0"
+                    for c in pod.spec.containers:
+                        # c_name = c.name
+                        # c_image= c.image
+                        cpu_requests = "0"
+                        cpu_limits = "0"
+                        memory_requests = "0"
+                        memory_limits = "0"
+                        if c.resources.requests is not None:
+                            if "cpu" in c.resources.requests:
+                                cpu_requests = c.resources.requests["cpu"]
+                            if "memory" in c.resources.requests:
+                                memory_requests = c.resources.requests["memory"]
+                        if c.resources.limits is not None:
+                            if "cpu" in c.resources.limits:
+                                cpu_limits = c.resources.limits["cpu"]
+                            if "memory" in c.resources.limits:
+                                memory_limits = c.resources.limits["memory"]
+                else:
+                    c_r = "0"
+                    c_l = "0"
+                    m_r = "0"
+                    m_l = "0"
+                    cpu_requests = ""
+                    cpu_limits = ""
+                    memory_requests = ""
+                    memory_limits = ""
+                    for c in pod.spec.containers:
+                        c_name = c.name
+                        # c_image= c.image
+                        if c.resources.requests is not None:
+                            if "cpu" in c.resources.requests:
+                                c_r = c.resources.requests["cpu"]
+                            if "memory" in c.resources.requests:
+                                m_r = c.resources.requests["memory"]
+                        if c.resources.limits is not None:
+                            if "cpu" in c.resources.limits:
+                                c_l = c.resources.limits["cpu"]
+                            if "memory" in c.resources.limits:
+                                m_l = c.resources.limits["memory"]
+
+                        cpu_requests += "%s=%s<br>" % (c_name, c_r)
+                        cpu_limits += "%s=%s<br>" % (c_name, c_l)
+                        memory_requests += "%s=%s<br>" % (c_name, m_r)
+                        memory_limits += "%s=%s<br>" % (c_name, m_l)
+
+                pod = {"pod_name": pod_name, "namespace": namespace, "status": status, "pod_ip": pod_ip,
+                    "cpu_requests": cpu_requests, "cpu_limits": cpu_limits, "memory_requests": memory_requests,
+                    "memory_limits": memory_limits,"create_time": create_time}
+                data.append(pod)
+
+        page = int(request.GET.get('page',1))
+        limit = int(request.GET.get('limit'))
+        start = (page - 1) * limit
+        end = page * limit
+        data = data[start:end]
+        count = len(data)
+        code = 0
+        msg = "获取数据成功"
+        res = {"code": code, "msg": msg, "count": count, "data": data}
+        return JsonResponse(res)
+    except Exception as e:
+        print(e)
+        status = getattr(e, "status")
+        if status == 403:
+            msg = "没有访问权限！"
+        else:
+            msg = "查询失败！"
+        res = {"code": 1, "msg": msg}
+        return JsonResponse(res)
+
+@k8s_tools.self_login_required
 def namespaces(request):
     return render(request, "k8s/namespaces.html")
 
-
+@k8s_tools.self_login_required
 def PersistentVolumes(request):
     return render(request, "k8s/PersistentVolumes.html")
 
 # 创建pv页面
+@k8s_tools.self_login_required
 def pv_create(request):
     return render(request,"k8s/pv_create.html")
 
 
 # node_api接口
+@k8s_tools.self_login_required
 def node_api(request):
     # 命名空间接口
     code = 0
@@ -120,6 +232,7 @@ def node_api(request):
 
 
 # pv_api接口
+@k8s_tools.self_login_required
 def pv_api(request):
     # 命名空间接口
     code = 0

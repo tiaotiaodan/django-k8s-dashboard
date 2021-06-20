@@ -12,6 +12,14 @@
 
 <!--内容-->
 {% block content %}
+    <!--设置日志显示背景颜色-->
+    <div id="modal" style="display: none">
+        <form class="layui-form " action="">
+            <div id="log-text" class="layui-form-item"
+                 style="background-color: black;color: white;padding: 10px;font-size: 16px">
+            </div>
+        </form>
+    </div>
     <div class="layui-card">
         <div class="layui-card-body">
             <table id="demo" lay-filter="test"></table>
@@ -32,6 +40,8 @@
 
     <script type="text/html" id="barDemo">
         <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit">YAML</a>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="terminal">终端</a>
+        <a class="layui-btn layui-btn-xs layui-bg-green" lay-event="log">查看日志</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
 
@@ -62,12 +72,12 @@
                     //{field: 'id', title: '序号', width: 80, fixed: 'left', type: 'numbers'},   // 序号排序，使用type：'numbers'
                     {field: 'name', title: '名称', sort: true}
                     , {field: 'namespace', title: '命名空间', sort: true, width: 120}
-                    , {field: 'pod_ip', title: 'IP地址',width:160}
+                    , {field: 'pod_ip', title: 'IP地址', width: 160}
                     , {field: 'labels', title: '标签', templet: labelsFormat}
                     , {field: 'containers', title: '容器组', templet: containersFormat}
                     , {field: 'status', title: '状态', sort: true, templet: statusFormat}
                     , {field: 'create_time', title: '创建时间'}
-                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 160}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 250}
                 ]]
                 , page: true      // 设置分页
                 , id: "po"      // 设置表格重载， 这里使用必须是id："值"
@@ -89,6 +99,7 @@
             }
 
             function containersFormat(d) {
+                result = "";
                 if (d.containers) {
                     for (let key in d.containers) {
                         data = d.containers[key];
@@ -104,6 +115,7 @@
 
             // 如果status为None，使用容器状态显示
             function statusFormat(d) {
+                result = "";
                 if (d.status == "None") {
                     for (let key in d.containers) {
                         result += d.containers[key].c_status + '<br>'
@@ -142,11 +154,56 @@
                         });
                     });
                 } else if (obj.event === 'edit') {
-                     layer.open({
+                    layer.open({
                         title: 'YAML',
                         type: 2,
                         area: ['60%', '60%'],
                         content: "{% url 'ace_editor' %}?resource=pods&" + 'namespace=' + data['namespace'] + '&name=' + data['name'],
+                    });
+                } else if (obj.event === 'log') {
+                    // 配置log查看弹出框日志
+                    var csrf_token = $('[name="csrfmiddlewaretoken"]').val();
+                    data['csrfmiddlewaretoken'] = csrf_token;
+                    $.ajax({
+                        url: '{% url "workload:pods_log" %}',
+                        type: 'POST',
+                        data: data,
+                        async: false,
+                        success: function (res) {
+                            if (res.code == '0') {
+                                $('#log-text').html("<pre>" + res.data + "</pre>");
+                            } else {
+                                $('#log-text').html("<pre>" + res.msg + "</pre>");
+                            }
+                        },
+                        error: function (res) {
+                            layer.msg("服务器接口异常！", {icon: 5})
+                        }
+                    });
+                    // 放在ajax下面，ajax改为同步（获取到数据预先填充html内容）,否则不会显示数据
+                    layer.open({
+                        title: "容器日志 " + data["name"],
+                        type: 1,
+                        area: ['60%', '70%'],
+                        closeBtn: 1, // 关闭按钮
+                        content: $("#modal").html()   // form div
+                    });
+                } else if (obj.event === 'terminal') {
+                    // 逗号拼接容器名, 例如containers=c1,c2
+                    cs = data['containers'];
+                    containers = "";
+                    for (let c in cs) {
+                        if (c < cs.length - 1) {
+                            containers += cs[c]['c_name'] + ","
+                        } else {
+                            containers += cs[c]['c_name']
+                        }
+                    }
+                    layer.open({
+                        title: "容器终端",
+                        type: 2,  // 加载层，从另一个网址引用
+                        area: ['80%', '90%'],
+                        content: '{% url "workload:terminal" %}?namespace=' + data["namespace"] + "&pod_name=" + data["name"] + "&containers=" + containers,
                     });
                 }
             });

@@ -24,6 +24,7 @@ urlpatterns = [
     re_path('^login/$',views.login, name="login"),    # login登陆接口
     re_path('^logout/$',views.logout, name="logout"),    # logout退出登录接口
     re_path('^namespace_api/$',views.namespace_api, name="namespace_api"),    # 匿名空间api接口
+    re_path('^node_resource/$', views.node_resource, name="node_resource"),   # index页面调用的计算资源接口
     re_path('^export_resource_api/$',views.export_resource_api, name="export_resource_api"),    # 编写yaml获取数据接口
     re_path('^ace_editor/$',views.ace_editor, name="ace_editor"),    # 编写yaml获取数据接口
     path('k8s/', include(('k8s.urls', 'k8s'), namespace='k8s')),            # k8s模块

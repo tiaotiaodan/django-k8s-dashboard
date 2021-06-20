@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels'         # 配置注册channels模块
 ]
+ASGI_APPLICATION = 'devops.routing.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -131,3 +133,14 @@ LOGIN_URL = '/login/'        # 设置默认访问页面
 STATICFILES_DIRS = (
 os.path.join(BASE_DIR, 'static'),
 )
+
+
+# 添加redis 配置
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('121.4.77.138',6379)],
+        },
+    },
+}

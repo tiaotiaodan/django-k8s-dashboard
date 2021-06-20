@@ -5,15 +5,24 @@ import os, hashlib, random
 from devops import k8s_tools  # 导入k8s登陆封装
 
 
-# deployments 页面展示
+# services 页面展示
+@k8s_tools.self_login_required
 def services(request):
     return render(request, "loadbalancer/services.html")
 
+# services_create 创建
+@k8s_tools.self_login_required
+def services_create(request):
+    return render(request, "loadbalancer/services_create.html")
+
+
 # ingresses 页面展示
+@k8s_tools.self_login_required
 def ingresses(request):
     return render(request, "loadbalancer/ingresses.html")
 
 # services_api 接口
+@k8s_tools.self_login_required
 def services_api(request):
     code = 0
     msg = ""
@@ -26,7 +35,7 @@ def services_api(request):
         data = []
         try:
             for svc in core_api.list_namespaced_service(namespace=namespace).items:
-                print(svc)
+                # print(svc)
                 name = svc.metadata.name
                 namespace = svc.metadata.namespace
                 labels = svc.metadata.labels
@@ -110,6 +119,7 @@ def services_api(request):
 
 
 # ingresses_api 接口
+@k8s_tools.self_login_required
 def ingresses_api(request):
     code = 0
     msg = ""

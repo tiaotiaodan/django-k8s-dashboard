@@ -28,12 +28,14 @@
         <!--增加一个输入框-->
         <input type="text" name="name" class="layui-input" style="width: 150px;height: 30px;float: left">
         <button class="layui-btn layui-btn-sm" style="float: left" id="searchBtn">搜索</button>
-         <a href="{% url 'workload:deployments_create' %}" class="layui-btn layui-btn-sm" style="float: left">创建</a>
+        <a href="{% url 'workload:deployments_create' %}" class="layui-btn layui-btn-sm" style="float: left">创建</a>
     </script>
 
 
     <script type="text/html" id="barDemo">
         <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit">YAML</a>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="details">详情</a>
+        <a class="layui-btn layui-bg-green layui-btn-xs" lay-event="scale">扩容/缩容</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
 
@@ -62,14 +64,14 @@
                 , cols: [[
                     //{field: 'id', title: '序号', width: 80, fixed: 'left', type: 'numbers'},   // 序号排序，使用type：'numbers'
                     {field: 'name', title: '名称', width: 180, unresize: true, sort: true}
-                    , {field: 'namespace', title: '命名空间',width:120}
-                    , {field: 'replicas', title: '预期副本数',width:80}
-                    , {field: 'available_replicas', title: '可用副本数',width:80}
+                    , {field: 'namespace', title: '命名空间', width: 120}
+                    , {field: 'replicas', title: '预期副本数', width: 100}
+                    , {field: 'available_replicas', title: '可用副本数', width: 100}
                     , {field: 'labels', title: '标签', templet: labelsFormat}
                     , {field: 'selector', title: 'Pod标签选择器', templet: selecotrFormat}
                     , {field: 'containers', title: '容器', templet: containersFormat}
                     , {field: 'create_time', title: '创建时间'}
-                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 160}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 250}
                 ]]
                 , page: true      // 设置分页
                 , id: "dp"      // 设置表格重载， 这里使用必须是id："值"
@@ -149,6 +151,37 @@
                         type: 2,
                         area: ['60%', '60%'],
                         content: "{% url 'ace_editor' %}?resource=deployments&" + 'namespace=' + data['namespace'] + '&name=' + data['name'],
+                    });
+                } else if (obj.event === 'details') {
+                    window.location.href = "{% url "workload:deployments_details" %}?namespace=" + data["namespace"] + "&name=" + data["name"]
+
+                } else if (obj.event === 'scale') {
+                    // 编写扩容/缩容接口对接，使用PUT功能提交
+                    layer.prompt({
+                        formType: 0
+                        , title: "扩容/缩容"
+                        , value: data.replicas   // 默认值，从当前字段获取
+                    }, function (value, index) {
+                        csrf_token = $('[name="csrfmiddlewaretoken"]').val();
+                        data['replicas'] = value;  // value是表单输入的值，重置值
+                        $.ajax({
+                            url: '{% url "workload:deployments_api" %}',
+                            type: "PUT",
+                            data: data,
+                            headers: {"X-CSRFToken": csrf_token},
+                            success: function (res) {
+                                if (res.code == '0') {
+                                    layer.msg(res.msg, {icon: 6}); //2秒关闭（如果不配置，默认是3秒）
+                                    // 更新当前页面字段值
+                                    obj.update({
+                                        replicas: value
+                                    })
+                                } else {
+                                    layer.msg(res.msg, {icon: 5})
+                                }
+                            }
+                        });
+                        layer.close(index);  // 关闭弹窗
                     });
                 }
             });
