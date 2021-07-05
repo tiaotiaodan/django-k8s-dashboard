@@ -82,9 +82,9 @@ DATABASES = {
 	'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'k8s',
-        'USER': 'k8s',
-        'PASSWORD': 'Aa@963852',
-        'HOST': '121.4.77.138',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
 	}
 }
@@ -140,7 +140,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('121.4.77.138',6379)],
+            "hosts": [('127.0.0.1',6379)],
         },
     },
 }

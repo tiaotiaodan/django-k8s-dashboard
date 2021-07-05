@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b162bbb3-d82a-4778-80a1-e3d444a2490c" name="默认更改列表" comment="" />
+    <list default="true" id="b162bbb3-d82a-4778-80a1-e3d444a2490c" name="默认更改列表" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/devops/k8s_tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/devops/k8s_tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/devops/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/devops/settings.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,32 +16,7 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/templates/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="592">
-              <caret line="245" column="14" lean-forward="true" selection-start-line="245" selection-start-column="14" selection-end-line="245" selection-end-column="14" />
-              <folding>
-                <element signature="e#1973#2009#0#HTML" expanded="true" />
-                <element signature="e#2291#2327#0#HTML" expanded="true" />
-                <element signature="e#2916#2952#0#HTML" expanded="true" />
-                <element signature="e#3243#3268#0#HTML" expanded="true" />
-                <element signature="e#4429#4466#0#HTML" expanded="true" />
-                <element signature="e#4790#4815#0#HTML" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/js/node-chart-index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1384" />
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -71,7 +50,6 @@
         <option value="$PROJECT_DIR$/templates/workload/statefulset.html" />
         <option value="$PROJECT_DIR$/templates/loadbalancer/service.html" />
         <option value="$PROJECT_DIR$/storage/urls.py" />
-        <option value="$PROJECT_DIR$/devops/k8s_tools.py" />
         <option value="$PROJECT_DIR$/templates/workload/deployment_create.html" />
         <option value="$PROJECT_DIR$/kubeconfig/ca.crt" />
         <option value="$PROJECT_DIR$/templates/k8s/pv_create.html" />
@@ -102,7 +80,6 @@
         <option value="$PROJECT_DIR$/templates/workload/deployments.html" />
         <option value="$PROJECT_DIR$/devops/routing.py" />
         <option value="$PROJECT_DIR$/devops/consumers.py" />
-        <option value="$PROJECT_DIR$/devops/settings.py" />
         <option value="$PROJECT_DIR$/templates/workload/pods.html" />
         <option value="$PROJECT_DIR$/workload/views.py" />
         <option value="$PROJECT_DIR$/templates/workload/terminal.html" />
@@ -111,6 +88,8 @@
         <option value="$PROJECT_DIR$/templates/index.html" />
         <option value="$PROJECT_DIR$/devops/urls.py" />
         <option value="$PROJECT_DIR$/dashboard/views.py" />
+        <option value="$PROJECT_DIR$/devops/settings.py" />
+        <option value="$PROJECT_DIR$/devops/k8s_tools.py" />
       </list>
     </option>
   </component>
@@ -333,6 +312,9 @@
       <workItem from="1621911425022" duration="39861000" />
       <workItem from="1622553575492" duration="2868000" />
       <workItem from="1623763472950" duration="31645000" />
+      <workItem from="1625388621176" duration="2520000" />
+      <workItem from="1625459095937" duration="77000" />
+      <workItem from="1625482933703" duration="70000" />
     </task>
     <servers />
   </component>
@@ -342,7 +324,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="229742000" />
+    <option name="totallyTimeSpent" value="232409000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -354,15 +336,14 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="821" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1440" height="825" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1795422" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18597998" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49928468" weight="0.30178326" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49928468" weight="0.30054644" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -371,7 +352,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32916668" />
       <window_info anchor="bottom" id="File Transfer" order="9" weight="0.31938633" />
       <window_info anchor="bottom" id="Database Changes" order="10" weight="0.32916668" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.3236111" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.1350614" />
       <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5007153" side_tool="true" weight="0.3552812" />
       <window_info anchor="bottom" id="调试" order="13" />
       <window_info anchor="bottom" id="Python Console" order="14" weight="0.32907802" />
@@ -431,16 +412,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="17" column="25" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/devops/k8s_tools.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="65" column="57" lean-forward="true" selection-start-line="65" selection-start-column="57" selection-end-line="65" selection-end-column="57" />
-          <folding>
-            <element signature="e#78#114#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -639,13 +610,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/devops/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="137" lean-forward="true" selection-start-line="137" selection-end-line="146" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/virtualenvs/django_k8s/lib/python3.9/site-packages/channels/generic/websocket.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -770,22 +734,29 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/static/js/node-chart-index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/devops/k8s_tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1384" />
+        <state relative-caret-position="225">
+          <caret line="15" column="53" selection-start-line="15" selection-start-column="53" selection-end-line="15" selection-end-column="53" />
+          <folding>
+            <element signature="e#78#114#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/devops/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1875">
+          <caret line="125" column="59" lean-forward="true" selection-start-line="125" selection-start-column="59" selection-end-line="125" selection-end-column="59" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="592">
-          <caret line="245" column="14" lean-forward="true" selection-start-line="245" selection-start-column="14" selection-end-line="245" selection-end-column="14" />
-          <folding>
-            <element signature="e#1973#2009#0#HTML" expanded="true" />
-            <element signature="e#2291#2327#0#HTML" expanded="true" />
-            <element signature="e#2916#2952#0#HTML" expanded="true" />
-            <element signature="e#3243#3268#0#HTML" expanded="true" />
-            <element signature="e#4429#4466#0#HTML" expanded="true" />
-            <element signature="e#4790#4815#0#HTML" expanded="true" />
-          </folding>
+        <state relative-caret-position="557">
+          <caret line="245" column="14" selection-start-line="245" selection-start-column="14" selection-end-line="245" selection-end-column="14" />
         </state>
       </provider>
     </entry>
